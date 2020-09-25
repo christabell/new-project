@@ -20,6 +20,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('report', 'MeetingController@showReport');
+Route::get('view', 'MeetingController@createPDF');
+Route::get('createroom', 'RoomController@create')->name('meeting.create');
+Route::post('createroom', 'RoomController@store')->name('meeting.store');
 
 Route::group([
 	'prefix' => 'admin',

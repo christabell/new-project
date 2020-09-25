@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use DB;
 
 
 class UserController extends Controller
@@ -27,7 +28,10 @@ class UserController extends Controller
      */
     public function create()
     {
-       return view('users');
+        $user = User::all();
+        $count = User::count();
+        return view('users', compact('user', 'count'));
+    //    return view('users');
     }
 
     /**
@@ -38,7 +42,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // validate
+        // validate user
         $request->validate([
            'name'  => 'required|string|max:255',
             'email'  => 'required|email|max:255|unique:users',
@@ -54,7 +58,9 @@ class UserController extends Controller
          ]);
 
         // return response
-            return $user;
+            // return $user;
+
+            return view('users')->with('user',$user);
             
 
     }
@@ -67,7 +73,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        return view('users.show',compact('user'));
     }
 
     /**
@@ -78,7 +85,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        return view('users')->with('user',$user);        
+    
     }
 
     /**
@@ -90,8 +99,21 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //valiadte
+        {
+            $request->validate([
+                'name'  => 'required|string|max:255',
+                'email'  => 'required|email|max:255|unique:users',
+                'password' =>  'required' 
+            ]);
+             
+            $user = User::find($id);
+            $user->name =  $request->get('name');
+            $user->email =  $request->get('email');
+            $user->save();
+            return $user;
     }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -101,6 +123,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+           // User::find($id)->delete();       
+            $user = User::find($id);
+            $user->delete();
+            return redirect('/users')->with('success', 'User deleted successfully!');
     }
 }
