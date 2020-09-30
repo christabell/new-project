@@ -64,12 +64,12 @@
     <div class="card">
 
 <div class="card-body">
-<h5 class="card-title">Beki Tatu Presentation</h5>
+<h5 class="card-title">beki tatu</h5>
                   
                   
-                  <p class="Lead">Madison Square </p>
+                  <p class="Lead">fghj</p>
                   <p class="Lead">Time:1:00-6:00 </p><br>
-                  <p class="card-text">Organizer:hussien</p>
+                  <p class="card-text">Organizer:user->id </p>
                   <button class="text-white btn btn-block btn-danger">View More</button>
 </div>
 </div>
