@@ -14,14 +14,16 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('allbookig', 'BookingController@index');
+Route::get('allbooking', 'BookingController@index');
 Route::get('status/{room}', 'BookingController@getStatus');
 Route::post('storebooking', 'BookingController@store');
 Route::post('allrooms', 'RoomController@index');
 Route::post('createroom', 'RoomController@store');
 Route::get('allmeeting', 'MeetingController@index');
 Route::post('createmeeting', 'MeetingController@store');
-Route::get('colaborators', 'CollaboratorsController@index');  
+Route::get('colaborators', 'CollaboratorsController@index'); 
+Route::post('createbooking', 'BookingController@store');
+
 
 Route::get('browse', 'RoomController@browse');
 Route::get('report', 'MeetingController@showReport');

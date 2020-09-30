@@ -12,4 +12,9 @@ class Meeting extends Model
          'title',
          'description',
     ];
+
+    public function Meeting(){
+    	return $this->belongsTo('App\Booking');
+    }
 }
+ 

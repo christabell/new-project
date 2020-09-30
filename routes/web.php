@@ -22,8 +22,12 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('report', 'MeetingController@showReport');
 Route::get('view', 'MeetingController@createPDF');
-Route::get('createroom', 'RoomController@create')->name('meeting.create');
-Route::post('createroom', 'RoomController@store')->name('meeting.store');
+Route::get('createmeeting', 'MeetingController@create')->name('meeting.create');
+Route::post('createmeeting', 'MeetingController@store')->name('meeting.store');
+Route::get('createroom', 'RoomController@create')->name('room.create');
+Route::post('createroom', 'RoomController@store')->name('room.store');
+Route::get('createbooking', 'BookingController@create')->name('booking.create');
+Route::post('createbooking', 'BookingController@store')->name('booking.store');
 
 Route::group([
 	'prefix' => 'admin',

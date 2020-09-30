@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Room;
+use DB;
+use Illuminate\Support\Facades\Validator;
+
 
 class RoomController extends Controller
 {
@@ -15,35 +18,50 @@ class RoomController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title'=>'required',
-            'description'=>'required',
-            'seats'=>'required',
-            'image'=>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
 
-        return $request->all();
+                // return response()->json($request->file);
 
-        if ($request->file('image')) {
-            $imagePath = $request->file('image');
-            $imageName = $imagePath->getClientOriginalName();
+                $request->validate([
+                    'title'=>'required',
+                    'description'=>'required',
+                    'seats'=>'required',
+                    'file'=>''
+                ]);
+        
+               
+                $imageName = $request->file->getClientOriginalName();
+
+        // if ($request->file('image')) {
+        //     
+        //     return response()->json($imagePath);
+
   
-            $path = $request->file('image')->storeAs('uploads', $imageName, 'public');
-          }
-        $room = new Room([
+        //     $path = $request->file('image')->storeAs('uploads', $imageName, 'public');
+        //   }
+        //   else {
+        //       return response()->json([
+        //           "status" => "image not uploaded"
+        //       ]);
+        //   }
+
+        $room = Room::create([
             
-        'title' => $request->get('title'),
-        'description' => $request->get('description'),
-        'seats' => $request->get('seats'),
-        'image' => $imageName,
+        'title' => request('title'),
+        'description' => request('description'),
+        'seats' => (int)request('seats'),
+        'image' => request('file'),
+
         ]);
-        $room->save();
-        return redirect('/rooms')->with('success', 'MeetingRoom saved!');
+
+
+        return redirect('createroom')->with('success', 'MeetingRoom saved!');
     }
 
     public function create()
     {
-        return view('createroom');
+        $room = Room::all();
+        $count = Room::count();
+        return view('rooms', compact('room', 'count'));
     }
 
     public function update(Request $request, $id)

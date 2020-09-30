@@ -14,7 +14,7 @@ class Room extends Model
         
     ];
 
-    public function getRooms(){
+    public static function getRooms(){
         $rooms = Room::all();
         return $rooms;
     }

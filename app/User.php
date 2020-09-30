@@ -37,8 +37,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function getUsers(){
-        $users = Users::all();
+    public static function getUsers(){
+        $users = User::all();
         return $users;
 
     }

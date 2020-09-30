@@ -5,9 +5,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Booking;
+use Carbon\Carbon;
+use App\User;
+use App\Room;
+use Auth;
+use App\Meeting;
 
 class BookingController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('auth'); 
+    }
 
     public function index()
     {
@@ -18,40 +27,52 @@ class BookingController extends Controller
     
     public function create()
     {
-       return view('bookings');
+        $booking = Booking::all();
+        $count = Booking::count();
+        $users = User::getUsers();
+        $rooms = Room::getRooms();
+        return view('booking.create', compact('users', 'rooms', 'booking', 'count'));
+
+      // return view('bookings');
     }
 
     public function store(Request $request) {
 
-   
-    // $rule = [ 
-    //     'room_id'=>'required',
-    //     "meeting_id" => "required", 
-    //     "meeting_room" => "required",
-    //     "start_time" => "required",
-    //     "end_time" => "required",
-    //     "status" => "required",
-    //     ];
 
-    //     $this->validate($request , $rule); 
-    //     echo "string";
-        $booking = new bookings;   
-        $booking->user_id = Auth::user()->id;      
-        
-        //'meeting_id' => $request->get('meeting_id'),
-       
-        $booking->room_id = $request->room_id; 
-        $booking->meeting_id = $request->meeting_id;
-        $booking->start_time = $request->start_time; 
-        $booking->end_time = $request->end_time;       
-        $booking->meeting_date = $request->meeting_date;  
-        $booking->status = $request->status;  
-       // $booking->status = Auth::user()->name;
-        
+        //  validate
+    $request->validate([
+        'room_id'=>'required',
+        'title'=>'required',
+        'date' => 'required',
+        'description'=>'required',
+        'start_time'=>'required',
+        'end_time'=>'required',
+    ]);
 
-        $booking->save();                   
+        // create meeting
 
-        return back('/bookings')->with('success', 'Successfully saved!');
+         $meeting = Meeting::create([
+            'user_id' => Auth::id(), 
+            'room_id' =>request('room_id'),
+            'title' =>request('title'), 
+            'description' =>request('description'),
+        ]);
+
+
+        // create booking
+        Booking::create([
+            'meeting_id' => $meeting->id,
+            'room_id' => request('room_id'), 
+            'date' => Carbon::now(), 
+            'start_time' =>request('start_time'), 
+            'end_time' =>request('end_time'),       
+            'status'=> 1,
+        ]);
+
+
+        // return response
+
+        return redirect()->route('booking.create')->with('success', 'Successfully saved!');
     }
     public function update(Request $input, $id)
     {
@@ -64,12 +85,13 @@ class BookingController extends Controller
             ]);
         $booking = Booking::find($id);
         $booking->meeting_id = $input->meeting_id;
+        $booking->room_id = $input->start_time;
         $booking->start_time = $input->start_time;
         $booking->end_time = $input->end_time;
         $booking->status = $input->status;
         // echo $post;
         $booking->save();
-        $bookings =  bookings::all();
+        $booking =  bookings::all();
        if (Auth::user()->role=='user'){
                 return view('user')->with('bookings', $bookings);
             } elseif (Auth::user()->role=='admin') {
@@ -80,7 +102,7 @@ class BookingController extends Controller
 
     public function edit($id)
     {
-        $booking = bookings::find($id);
+        $booking = booking::find($id);
         // return $bookings;
         if (Auth::user()->role=='user'){
                 return view('/booking')->with('booking', $booking);
@@ -91,7 +113,7 @@ class BookingController extends Controller
 
     public function destroy($id)
     {
-        $bookings = bookings::destroy($id);
+        $booking = booking::destroy($id);
         return back();
         // return redirect("/mybookings");
         // return view('/mybookings')->with('bookings', $bookings);

@@ -31,7 +31,7 @@
           <th>Id</th>
             <th>Name</th>
             <th>Email</th>
-			<th>Register</th>
+			<th>Registered at</th>
             <th>Action</th>
             
           </tr>
@@ -70,7 +70,7 @@
 		 @csrf
 
 <div class="form-group">
-            <label>UserName</label>
+            <label>Name</label>
             <input  type="text" name="name" class="form-control input-btn" placeholder=""required="">
            
         </div> 

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Meeting;
 use PDF;
+use Carbon\Carbon;
 use App\User;
+use App\Room;
 
 class MeetingController extends Controller
 {
@@ -32,13 +34,15 @@ class MeetingController extends Controller
             'description' => $request->get('description'),
         ]);
         $meeting->save();
-        return redirect('/meetings')->with('success', 'Successfully saved!');
+        return redirect('meeting')->with('success', 'Successfully saved!');
     }
         public function create()
         {
+            $meeting = Meeting::all();
+            $count = Meeting::count();
             $users = User::getUsers();
             $rooms = Room::getRooms();
-            return view('meetings.create', compact('users', 'room'));
+            return view('meeting.create', compact('users', 'rooms', 'meeting', 'count'));
         }
 
     public function update(Request $request, $id)
